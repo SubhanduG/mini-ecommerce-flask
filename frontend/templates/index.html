@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Mini E-Commerce</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css')}}">
+</head>
+
+<body class="bg-light">
+    <div class="container mt-5">
+        <h2 class="text-center mb-4">Products</h2>
+        <div class="row" id="productList"></div>
+    </div>
+    <script src="{{ url_for('static', filename='js/index.js')}}"></script>
+</body>
+
+</html>
