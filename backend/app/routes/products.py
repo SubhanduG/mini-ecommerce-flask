@@ -6,5 +6,5 @@ product_bp = Blueprint("products", __name__, url_prefix="/products")
 
 @product_bp.route("", methods=["GET"])
 def list_products():
-    product = get_all_products()
-    return jsonify(product), 200
+    products = get_all_products()
+    return jsonify(products), 200

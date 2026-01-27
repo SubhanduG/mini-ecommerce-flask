@@ -1,17 +1,47 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-    <title>Mini E-Commerce</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css')}}">
+    <meta charset="UTF-8">
+    <title>MiniShop</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 
-<body class="bg-light">
-    <div class="container mt-5">
-        <h2 class="text-center mb-4">Products</h2>
-        <div class="row" id="productList"></div>
+<body>
+
+    <div class="bg-white shadow-sm">
+        <div class="container"
+            style="display:flex; justify-content:space-between; align-items:center; padding:15px 20px;">
+            <h2>MiniShop</h2>
+
+            <div class="position-relative d-inline-block" onmouseenter="showCartActions()"
+                onmouseleave="hideCartActions()">
+
+                <button class="btn btn-outline-dark" onclick="goToOrderSummary()">
+                    🛒 Cart
+                    <span id="cartCount" class="position-absolute top-0 start-100 translate-middle">
+                        0
+                    </span>
+                </button>
+
+                <div id="cartActions" class="position-absolute end-0">
+                    <button class="btn btn-success btn-sm w-100" onclick="placeOrderFromHover(event)">
+                        Place Order
+                    </button>
+                </div>
+
+            </div>
+        </div>
     </div>
-    <script src="{{ url_for('static', filename='js/index.js')}}"></script>
+
+    <div class="container mt-5">
+        <h2 class="mb-4">Products</h2>
+
+        <div class="row" id="productList">
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/index.js') }}"></script>
 </body>
 
 </html>
