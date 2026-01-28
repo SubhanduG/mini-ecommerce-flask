@@ -7,38 +7,31 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 
-<body>
+<body class="index-bg">
 
     <div class="bg-white shadow-sm">
         <div class="container"
             style="display:flex; justify-content:space-between; align-items:center; padding:15px 20px;">
             <h2>MiniShop</h2>
 
-            <div class="position-relative d-inline-block" onmouseenter="showCartActions()"
-                onmouseleave="hideCartActions()">
+            <div id="authButtons">
+                <a href="/register" class="btn btn-outline-primary btn-sm">Register</a>
+                <a href="/login" class="btn btn-outline-success btn-sm">Login</a>
+            </div>
 
-                <button class="btn btn-outline-dark" onclick="goToOrderSummary()">
-                    🛒 Cart
-                    <span id="cartCount" class="position-absolute top-0 start-100 translate-middle">
-                        0
-                    </span>
+            <div id="userActions" class="d-none" style="display:flex; gap:10px;">
+                <button class="btn btn-outline-dark" onclick="goToCart()">
+                    🛒 Cart <span id="cartCount">0</span>
                 </button>
-
-                <div id="cartActions" class="position-absolute end-0">
-                    <button class="btn btn-success btn-sm w-100" onclick="placeOrderFromHover(event)">
-                        Place Order
-                    </button>
-                </div>
-
+                <button class="btn btn-success btn-sm" onclick="placeOrder()">Place Order</button>
+                <button class="btn btn-outline-danger btn-sm" onclick="logout()">Logout</button>
             </div>
         </div>
     </div>
 
     <div class="container mt-5">
         <h2 class="mb-4">Products</h2>
-
-        <div class="row" id="productList">
-        </div>
+        <div class="row" id="productList"></div>
     </div>
 
     <script src="{{ url_for('static', filename='js/index.js') }}"></script>

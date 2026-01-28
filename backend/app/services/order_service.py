@@ -1,8 +1,14 @@
 from database.db_config import get_getconnection
 from datetime import datetime
+from flask import session
 
 
 def place_order():
+    if "user_id" not in session:
+        raise ValueError("Login required to place order")
+
+    user_id = session["user_id"]
+
     conn = get_getconnection()
     cursor = conn.cursor(dictionary=True)
 
@@ -15,7 +21,8 @@ def place_order():
             c.quantity
         FROM cart c
         JOIN products p ON c.product_id = p.id
-    """)
+        WHERE c.user_id = %s
+    """, (user_id,))
     items = cursor.fetchall()
 
     if not items:
@@ -30,9 +37,9 @@ def place_order():
     total_amount = sum(item["price"] * item["quantity"] for item in items)
 
     cursor.execute("""
-        INSERT INTO orders (total_amount, created_at)
-        VALUES (%s, %s)
-    """, (total_amount, datetime.now()))
+        INSERT INTO orders (user_id, total_amount, created_at)
+        VALUES (%s, %s, %s)
+    """, (user_id, total_amount, datetime.now()))
 
     order_id = cursor.lastrowid
 
@@ -48,7 +55,7 @@ def place_order():
             WHERE id = %s
         """, (item["quantity"], item["product_id"]))
 
-    cursor.execute("DELETE FROM cart")
+    cursor.execute("DELETE FROM cart WHERE user_id = %s", (user_id,))
 
     conn.commit()
     conn.close()
@@ -57,14 +64,20 @@ def place_order():
 
 
 def get_orders():
+    if "user_id" not in session:
+        return []
+
+    user_id = session["user_id"]
+
     conn = get_getconnection()
     cursor = conn.cursor(dictionary=True)
 
     cursor.execute("""
         SELECT id, total_amount, created_at
         FROM orders
+        WHERE user_id = %s
         ORDER BY created_at DESC
-    """)
+    """, (user_id,))
 
     orders = cursor.fetchall()
     conn.close()

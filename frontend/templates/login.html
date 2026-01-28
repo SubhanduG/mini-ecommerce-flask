@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body class="bg-container login-container login-bg">
+
+    <div class="auth-container">
+        <div class="auth-row justify-content-center align-items-center vh-100">
+            <div class="auth-col-md-4">
+                <div class="auth-card shadow">
+                    <div class="card-body">
+                        <h3 class="text-center mb-4">👤 Login</h3>
+
+                        <div id="msg" class="mb-2"></div>
+
+                        <form id="loginForm" action="{{ url_for('auth.login') }}" method="POST">
+                            <div class="mb-3">
+                                <label for="username">Username or Email</label>
+                                <input type="text" id="username" name="username" class="form-control"
+                                    placeholder="Enter username or email" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="password">Password</label>
+                                <input type="password" id="password" name="password" class="form-control"
+                                    placeholder="Enter password" required>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary w-100">Login</button>
+                        </form>
+
+                        <div class="text-center mt-3">
+                            <a href="{{ url_for('pages.register_page') }}">Create Account</a> |
+                            <a href="{{ url_for('pages.forgot_password_page') }}">Forgot Password?</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/login.js') }}"></script>
+
+</body>
+
+</html>

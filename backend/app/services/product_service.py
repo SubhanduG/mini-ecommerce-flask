@@ -11,7 +11,8 @@ def get_all_products():
             name,
             price,
             stock,
-            created_at
+            created_at,
+            image
         FROM products
         ORDER BY created_at DESC
     """)
