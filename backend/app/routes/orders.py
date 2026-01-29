@@ -18,8 +18,9 @@ def confirm_order():
 
     try:
         order_id = place_order()
+
         if order_id is None:
-            return jsonify({"error": "Your cart is empty"}), 400
+            return jsonify({"message": "Your cart is empty"}), 400
 
         return jsonify({
             "message": "Order placed successfully",
@@ -27,11 +28,11 @@ def confirm_order():
         }), 201
 
     except ValueError as e:
-        return jsonify({"error": str(e)}), 400
+        return jsonify({"message": str(e)}), 400
 
     except Exception as e:
         print("PLACE ORDER ERROR:", e)
-        return jsonify({"error": "Internal server error"}), 500
+        return jsonify({"message": "Internal server error"}), 500
 
 
 @orders_bp.route("", methods=["GET"])

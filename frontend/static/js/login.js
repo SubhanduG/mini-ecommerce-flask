@@ -2,10 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const loginForm = document.getElementById("loginForm");
     const loginMsg = document.getElementById("msg");
 
-    if (!loginForm) {
-        console.error("loginForm not found");
-        return;
-    }
+    if (!loginForm) return console.error("loginForm not found");
 
     loginForm.addEventListener("submit", async (e) => {
         e.preventDefault();
@@ -16,7 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const password = document.getElementById("password").value.trim();
 
         if (!identifier || !password) {
-            loginMsg.textContent = "Username/email and password are required.";
+            loginMsg.textContent = "Identifier and password are required.";
             loginMsg.className = "alert alert-danger";
             return;
         }
@@ -34,14 +31,15 @@ document.addEventListener("DOMContentLoaded", () => {
             try {
                 data = JSON.parse(text);
             } catch {
-                console.error("Non-JSON response:", text);
-                throw new Error("Invalid server response");
+                loginMsg.textContent = "Unexpected server response";
+                loginMsg.className = "alert alert-danger";
+                return;
             }
 
             if (response.ok) {
                 window.location.href = "/dashboard";
             } else {
-                loginMsg.textContent = data.error || "Login failed";
+                loginMsg.textContent = data.error || data.message || "Login failed";
                 loginMsg.className = "alert alert-danger";
             }
         } catch (err) {

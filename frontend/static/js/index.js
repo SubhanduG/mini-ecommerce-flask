@@ -1,6 +1,11 @@
 document.addEventListener("DOMContentLoaded", () => {
   checkLoginStatus();
   loadProducts();
+
+  window.addEventListener("pageshow", () => {
+    updateCartCount();
+    loadProducts();
+  });
 });
 
 let isLoggedIn = false;
@@ -37,19 +42,34 @@ function loadProducts() {
       products.forEach(p => {
         const card = document.createElement("div");
         card.className = "col-md-4 mb-3";
+
+        const outOfStock = p.stock === 0;
+
         card.innerHTML = `
           <div class="card shadow">
-              <img src="${p.image}" class="card-img-top" alt="${p.name}" style="height:200px; object-fit:contain; width:100%; background-color:#f8f9fa;">
-              <div class="card-body">
-                  <h5>${p.name}</h5>
-                  <p>Price: $${p.price}</p>
-                  <p>Stock: ${p.stock}</p>
-                  <button class="btn btn-primary btn-sm">Add to Cart</button>
-              </div>
+            <img src="${p.image}" class="card-img-top" alt="${p.name}"
+                 style="height:200px; object-fit:contain; width:100%; background-color:#f8f9fa;">
+            <div class="card-body">
+              <h5>${p.name}</h5>
+              <p>Price: $${p.price}</p>
+              <p class="${outOfStock ? "text-danger fw-bold" : ""}">
+                ${outOfStock ? "Out of Stock" : `Stock: ${p.stock}`}
+              </p>
+              <button class="btn btn-sm ${outOfStock ? "btn-unavailable" : "btn-primary"}"
+                      ${outOfStock ? "disabled" : ""}>
+                ${outOfStock ? "Unavailable" : "Add to Cart"}
+              </button>
+            </div>
           </div>
         `;
+
         const btn = card.querySelector("button");
-        btn.addEventListener("click", () => handleLoginRequired(() => addToCart(p.id)));
+        if (!outOfStock) {
+          btn.addEventListener("click", () =>
+            handleLoginRequired(() => addToCart(p.id))
+          );
+        }
+
         list.appendChild(card);
       });
     })
@@ -78,8 +98,10 @@ function addToCart(productId) {
       if (data.error) {
         alert(data.error);
       } else {
-        alert("Product added to cart");
+        console.log("Product added to cart");
+
         updateCartCount();
+        loadProducts();
       }
     })
     .catch(err => console.error("Error adding to cart:", err));
@@ -89,32 +111,17 @@ function updateCartCount() {
   fetch("/cart/count", { credentials: "include" })
     .then(res => res.json())
     .then(data => {
-      document.getElementById("cartCount").innerText = data.count || 0;
+      const countElem = document.getElementById("cartCount");
+      if (countElem) {
+        countElem.innerText = data.count || 0;
+      }
     })
     .catch(err => console.error("Error fetching cart count:", err));
 }
 
 function goToCart() {
-  handleLoginRequired(() => window.location.href = "/order-summary");
-}
-
-function placeOrder() {
   handleLoginRequired(() => {
-    fetch("/orders/confirm", {
-      method: "POST",
-      credentials: "include",
-    })
-      .then(res => res.json())
-      .then(data => {
-        if (data.error) {
-          alert(data.error);
-        } else {
-          alert("Order placed successfully!");
-          updateCartCount();
-          window.location.href = "/order-summary";
-        }
-      })
-      .catch(err => console.error("Error placing order:", err));
+    window.location.href = "/order-summary";
   });
 }
 

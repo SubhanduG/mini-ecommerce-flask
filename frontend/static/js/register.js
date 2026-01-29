@@ -1,81 +1,105 @@
-const registerForm = document.getElementById("registerForm");
-const otpDiv = document.getElementById("otpDiv");
-const verifyOtpBtn = document.getElementById("verifyOtpBtn");
-const msgDiv = document.getElementById("msg");
+document.addEventListener("DOMContentLoaded", () => {
+    const registerForm = document.getElementById("registerForm");
+    const otpDiv = document.getElementById("otpDiv");
+    const verifyOtpBtn = document.getElementById("verifyOtpBtn");
+    const msgDiv = document.getElementById("msg");
 
-let registeredEmail = "";
+    let registeredEmail = "";
 
-registerForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    msgDiv.textContent = "";
-    msgDiv.className = "";
+    if (!registerForm || !otpDiv || !verifyOtpBtn || !msgDiv) return console.error("Required elements not found");
 
-    const username = document.getElementById("username").value.trim();
-    const email = document.getElementById("email").value.trim();
-    const password = document.getElementById("password").value.trim();
+    registerForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        msgDiv.textContent = "";
+        msgDiv.className = "";
 
-    if (!username || !email || !password) {
-        msgDiv.textContent = "All fields are required.";
-        msgDiv.className = "alert alert-danger";
-        return;
-    }
+        const username = document.getElementById("username").value.trim();
+        const email = document.getElementById("email").value.trim();
+        const password = document.getElementById("password").value.trim();
 
-    try {
-        const response = await fetch("/auth/register", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ username, email, password }),
-        });
+        if (!username || !email || !password) {
+            msgDiv.textContent = "All fields are required.";
+            msgDiv.className = "alert alert-danger";
+            return;
+        }
 
-        const data = await response.json();
+        try {
+            const response = await fetch("/auth/register", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ username, email, password })
+            });
 
-        if (response.ok) {
-            msgDiv.textContent = data.message;
-            msgDiv.className = "alert alert-success";
+            const text = await response.text();
+            let data;
+            try {
+                data = JSON.parse(text);
+            } catch {
+                msgDiv.textContent = "Unexpected server response";
+                msgDiv.className = "alert alert-danger";
+                return;
+            }
 
-            registeredEmail = email;
-            registerForm.style.display = "none";
-            otpDiv.style.display = "block";
-        } else {
-            msgDiv.textContent = data.error || "Registration failed";
+            if (response.ok) {
+                msgDiv.textContent = data.message;
+                msgDiv.className = "alert alert-success";
+
+                registeredEmail = email;
+                registerForm.style.display = "none";
+                otpDiv.style.display = "block";
+            } else {
+                msgDiv.textContent = data.error || "Registration failed";
+                msgDiv.className = "alert alert-danger";
+            }
+
+        } catch (err) {
+            console.error(err);
+            msgDiv.textContent = "Server error. Please try again.";
             msgDiv.className = "alert alert-danger";
         }
-    } catch (err) {
-        console.error(err);
-        msgDiv.textContent = "Server error";
-        msgDiv.className = "alert alert-danger";
-    }
-});
+    });
 
-verifyOtpBtn.addEventListener("click", async () => {
-    const otp = document.getElementById("otp").value.trim();
+    verifyOtpBtn.addEventListener("click", async () => {
+        msgDiv.textContent = "";
+        msgDiv.className = "";
 
-    if (!otp) {
-        msgDiv.textContent = "Enter OTP";
-        msgDiv.className = "alert alert-danger";
-        return;
-    }
+        const otp = document.getElementById("otp").value.trim();
+        if (!otp) {
+            msgDiv.textContent = "OTP is required";
+            msgDiv.className = "alert alert-danger";
+            return;
+        }
 
-    try {
-        const response = await fetch("/auth/verify-otp", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email: registeredEmail, otp }),
-        });
+        try {
+            const response = await fetch("/auth/verify-otp", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email: registeredEmail, otp })
+            });
 
-        const data = await response.json();
+            const text = await response.text();
+            let data;
+            try {
+                data = JSON.parse(text);
+            } catch {
+                msgDiv.textContent = "Unexpected server response";
+                msgDiv.className = "alert alert-danger";
+                return;
+            }
 
-        if (response.ok) {
-            msgDiv.textContent = data.message;
-            msgDiv.className = "alert alert-success";
-            setTimeout(() => window.location.href = "/login", 1500);
-        } else {
-            msgDiv.textContent = data.error || "Invalid OTP";
+            if (response.ok) {
+                msgDiv.textContent = data.message;
+                msgDiv.className = "alert alert-success";
+                setTimeout(() => window.location.href = "/login", 1500);
+            } else {
+                msgDiv.textContent = data.error || "Invalid OTP";
+                msgDiv.className = "alert alert-danger";
+            }
+
+        } catch (err) {
+            console.error(err);
+            msgDiv.textContent = "Server error. Please try again.";
             msgDiv.className = "alert alert-danger";
         }
-    } catch (err) {
-        console.error(err);
-        msgDiv.textContent = "Server error";
-        msgDiv.className = "alert alert-danger";
-    }
+    });
 });
