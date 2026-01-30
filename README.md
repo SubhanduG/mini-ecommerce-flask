@@ -90,6 +90,7 @@ Environment variables - Git & GitHub - Modular backend architecture
 ### Cart Table
 
 -   id
+-   user_id
 -   product_id
 -   quantity
 -   created_at
@@ -97,7 +98,34 @@ Environment variables - Git & GitHub - Modular backend architecture
 ### Orders Table
 
 -   id
+-   user_id
 -   total_amount
+-   created_at
+
+### Order Items Table
+
+-   id
+-   order_id
+-   product_id
+-   quantity
+-   price
+
+### Users Table
+
+-   id
+-   username
+-   email
+-   password_hash
+-   is_verified
+-   created_at
+
+### Email OTP Table
+
+-   id
+-   email
+-   otp
+-   type
+-   expires_at
 -   created_at
 
 ------------------------------------------------------------------------
