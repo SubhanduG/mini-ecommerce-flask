@@ -25,34 +25,6 @@ body {
     color: #fff;
 }
 
-.index-bg {
-    background-image: url("/static/images/Index_Background.jpg");
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: center;
-}
-
-.register-bg {
-    background-image: url("/static/images/Register_Background.jpg");
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: center;
-}
-
-.login-bg {
-    background-image: url("/static/images/Login_Background.jpg");
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: center;
-}
-
-.forgot-bg {
-    background-image: url("/static/images/ForgotPassword_Background.jpg");
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: center;
-}
-
 table {
     width: 100%;
     border-collapse: collapse;
@@ -127,7 +99,10 @@ td {
 }
 
 .login-container {
-    background: linear-gradient(135deg, #e0f7fa, #f8f9fa);
+    background-image: url("/static/images/Login_Background.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
     min-height: 100vh;
     display: flex;
     align-items: center;
@@ -135,7 +110,10 @@ td {
 }
 
 .register-container {
-    background: linear-gradient(135deg, #e0f7fa, #f8f9fa);
+    background-image: url("/static/images/Register_Background.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
     min-height: 100vh;
     display: flex;
     align-items: center;
@@ -143,11 +121,21 @@ td {
 }
 
 .forgot-container {
-    background: linear-gradient(135deg, #e0f7fa, #f8f9fa);
+    background-image: url("/static/images/ForgotPassword_Background.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
     min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.index-container {
+    background-image: url("/static/images/Index_Background.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
 }
 
 .auth-container {
