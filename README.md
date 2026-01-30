@@ -42,7 +42,7 @@ Environment variables - Git & GitHub - Modular backend architecture
         routes/        -> API routes
         services/      -> Business logic
         config.py      -> Application configuration
-        extensions.py -> Flask extensions
+        extensions.py  -> Flask extensions
       run.py           -> Application entry point
 
     frontend/
